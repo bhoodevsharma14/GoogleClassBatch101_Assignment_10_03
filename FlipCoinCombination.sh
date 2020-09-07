@@ -1,11 +1,13 @@
 #!/bin/bash -x
 
-	read -p "Enter How many times You Want to Flip Coin : " Total_Flips
+	echo "We Perform All The Combination for 100 Times" 
+	Total_Flips=100
 
 	declare -A Singlet
 	declare -A Doublet
 	declare -A Triplet
 	declare -A Persentage
+	declare -a SortedArrayAscending
 
 	function getpersentage()
 	{
@@ -33,6 +35,39 @@
 
 
 	}
+
+function SortArrayAscending()
+{
+   newArray=("$@")
+        while True
+        do
+                min=0
+                for index in ${!newArray[@]}
+                do
+								value=${newArray[$index]}
+                        if (( ${min%%.*} == 0 || ${Persentage[$value]%%.*} < ${min%%.*} ))
+                        then
+                                min=${Persentage[$value]}
+										key_min=$value
+                                remove=$index
+                        fi
+                done
+
+                SortedArrayAscending+=($key_min)
+                unset newArray[$remove]
+                length=${#newArray[@]}
+                if [ $length -eq 0 ]
+                then
+                        break
+                fi
+        done
+			echo -e "\nSorted in Ascending Order\n"
+		for key in ${SortedArrayAscending[@]}
+		do
+			echo "$key : ${Persentage[$key]}%"
+		done
+	      echo "Sorted Array in Ascending Order ${SortedArrayAscending[@]}"
+}
 
 
 	# Singlet
@@ -147,3 +182,15 @@
 	do
 		echo "Persentage of $i : ${Persentage[$i]}"
 	done
+
+
+
+
+
+	 SortArrayAscending ${!Persentage[@]}
+
+	last_index=${#SortedArrayAscending[@]}
+	((--last_index))
+
+	last_value=${SortedArrayAscending[$last_index]}
+	echo "Maximum Occured Combination is $last_value  : ${Persentage[$last_value]}%"
